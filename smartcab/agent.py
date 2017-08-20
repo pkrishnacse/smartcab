@@ -46,7 +46,7 @@ class LearningAgent(Agent):
 		self.epsilon=0
 		self.alpha=0	
 	else:
-		self.epsilon = math.exp(-0.008*self.trials)
+		self.epsilon = math.exp(-0.005*self.trials)
 		self.trials+=1
 		
 	
@@ -114,7 +114,7 @@ class LearningAgent(Agent):
         # Set the agent state and default action
         self.state = state
         self.next_waypoint = self.planner.next_waypoint()
-        action = 'Right'
+        action = None
 
         ########### 
         ## TO DO ##
@@ -131,8 +131,6 @@ class LearningAgent(Agent):
 		for key in self.Q[state].keys():
 			if self.Q[state][key] == max_amt:
 				max_list.append(key)
-		if len(max_list)>2 and None in max_list:
-			max_list.remove(None)
 		action = random.choice(max_list) 
 	
         return action
@@ -149,7 +147,7 @@ class LearningAgent(Agent):
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
 
-	(self.Q[state])[action] = (1-self.alpha)*(self.Q[state])[action] + self.alpha*(reward+self.get_maxQ(state))
+	self.Q[state][action] = (1 - self.alpha) * self.Q[state][action] + self.alpha * reward
         return
 
 
@@ -185,7 +183,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent,learning=True,alpha=0.1)
+    agent = env.create_agent(LearningAgent,learning=True,alpha=0.2)
     
     ##############
     # Follow the driving agent
